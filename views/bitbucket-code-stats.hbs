@@ -1,0 +1,20 @@
+{{!< layout}}
+
+<div id="bitbucket-code-stats">
+    <ol class="numbers">
+        {{#each languages}}
+            <li>
+                <a>
+                    <span class="lang-color" style="background: {{langColor}};"></span>
+                    <span class="lang">{{lang}}</span>
+                    <span class="percent">{{percent}}</span>
+                </a>
+            </li>
+        {{/each}}
+    </ol>
+    <div class="graph">
+        {{#each languages}}
+            <div class="lang-color" style="background: {{langColor}}; width: {{percent}}"></div>
+        {{/each}}
+    </div>
+</div>

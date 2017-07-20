@@ -1,0 +1,44 @@
+{
+    "key": "bitbucket-code-stats",
+    "name": "Bitbucket Code Stats",
+    "description": "An add-on that brings GitHub like code stats to your Bitbucket repo overview",
+    "vendor": {
+        "name": "Agustín Rodríguez",
+        "url": "http://agurodriguez.net"
+    },
+    "baseUrl": "{{localBaseUrl}}",
+    "authentication": {
+        "type": "jwt"
+    },
+    "lifecycle": {
+        "installed": "/installed",
+        "uninstalled": "/uninstalled"
+    },
+    "modules": {
+        "oauthConsumer": {
+            "clientId": "{{consumerKey}}"
+        },
+        "webhooks": [
+            {
+                "event": "*",
+                "url": "/webhook"
+            }
+        ],
+        "webItem": [
+        ],
+        "repoPage": [
+        ],
+        "webPanel": [
+            {
+                "url": "/bitbucket-code-stats?repoPath={repo_path}",
+                "name": {
+                    "value": "Bitbucket Code Stats Panel"
+                },
+                "location": "org.bitbucket.repository.overview.informationPanel",
+                "key": "bitbucket-code-stats-panel"
+            }
+        ]
+    },
+    "scopes": ["project", "repository"],
+    "contexts": ["personal"]
+}

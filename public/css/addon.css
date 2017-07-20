@@ -1,0 +1,50 @@
+/* add-on styles */
+#bitbucket-code-stats {
+  background: white;
+  width: 100%;
+}
+
+#bitbucket-code-stats ol {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+#bitbucket-code-stats ol li {
+  flex: 1;
+  padding: 10px 5px;
+  text-align: center;
+}
+
+#bitbucket-code-stats ol li a:hover {
+  text-decoration: none;
+}
+
+#bitbucket-code-stats ol li a .lang {
+  color: black;
+  font-weight: bold;
+}
+
+#bitbucket-code-stats ol li a .lang-color {
+  background: black;
+  border-radius: 50%;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+}
+
+#bitbucket-code-stats ol li a .percent {
+  color: #6a737d;
+  font-weight: bold;
+}
+
+#bitbucket-code-stats .graph .lang-color {
+  float: left;
+  height: 8px;
+}
+
+#bitbucket-code-stats .graph::after {
+  clear: both;
+  content: ' ';
+  display: table;
+}
