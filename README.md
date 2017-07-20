@@ -1,24 +1,24 @@
-# Atlassian Add-on using Express
+# Bitbucket Code Stats
 
-Congratulations! You've successfully created an Atlassian Connect Add-on using
-the Express web application framework.
+It's an add-on that brings GitHub like code stats to your Bitbucket repo overview.
+
+<p align="center">
+  <img src="http://i.imgur.com/cQJlbN4.png" alt="Bitbucket overview with Bitbucket Code Stats" />
+</p>
 
 # Installation
 
-1. Install [git], [node], [npm] \(2.7.5+) and [ngrok].
-2. Run `npm install`.
-3. Add your Bitbucket credentials to `credentials.json`.
-4. Run `ngrok http 3000` and take note of the proxy's `https://..` base url.
-5. Run `AC_LOCAL_BASE_URL=https://THE_NGROK_BASE_URL node app.js` from the
-repository root.
+[TODO]
 
-# Development loop
+# TODO
 
-You can manually install/update/uninstall your add-ons from
-`https://bitbucket.org/account/user/USERNAME/addon-management`.
+* Show more stats (number of commits, contributors, etc)
+* Show files written in each of the calculated languages
+* Show progress bars
+* Improve cache management
+* Improve error handling
+* Any idea? [Open an issue](https://github.com/agurz/bitbucket-code-stats-add-on/issues/new)
 
-[git]: http://git-scm.com/
-[node]: https://nodejs.org/
-[npm]: https://github.com/npm/npm#super-easy-install
-[ngrok]: https://ngrok.com/
+# License
 
+[MIT](https://github.com/agurz/bitbucket-code-stats-add-on/blob/master/LICENSE.txt)
