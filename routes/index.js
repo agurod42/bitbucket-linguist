@@ -5,7 +5,7 @@ const md5 = require('md5');
 const path = require('path');
 const util = require('util');
 
-const DEFAULT_LANG_COLOR = '#333';
+const DEFAULT_LANG_COLOR = '#CCCCCC';
 
 module.exports = function (app, addon) {
     
