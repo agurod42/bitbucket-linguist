@@ -61,7 +61,7 @@
         // Key of this add-on's registered OAuth consumer
         "consumerKey": "FdYG62yMzjZvgcABM5",
         // This is the public URL to your production add-on.
-        "localBaseUrl": "https://bitbucket-code-stats.herokuapp.com/",
+        "localBaseUrl": "https://bitbucket-code-stats.herokuapp.com",
         "store": {
             // You won't want to use the memory store in production, or your install
             // registrations will be forgotten any time your app restarts.  Here
