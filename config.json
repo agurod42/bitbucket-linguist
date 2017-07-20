@@ -67,10 +67,12 @@
             // registrations will be forgotten any time your app restarts.  Here
             // we tell atlassian-connect-express to use the PostgreSQL backend for the default
             // JugglingDB adapter.
-            "type": "postgres",
+            //"type": "postgres",
             // Again, a PaaS host like Heroku will probably provide the db connection
             // URL to you through the environment, so we tell atlassian-connect-express to use that value.
-            "url": "$DATABASE_URL"
+            //"url": "$DATABASE_URL"
+            "adapter": "jugglingdb",
+            "type": "memory"
         },
         // Make sure that your add-on can only be registered by the hosts on
         // these domains.
