@@ -1,5 +1,6 @@
 *.iml
 *.idea
+.bundle
 .vscode
 .DS_Store
 node_modules
