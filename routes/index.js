@@ -5,6 +5,8 @@ const md5 = require('md5');
 const path = require('path');
 const util = require('util');
 
+const DEFAULT_LANG_COLOR = '#333';
+
 module.exports = function (app, addon) {
     
     //healthcheck route used by micros to ensure the addon is running.
@@ -61,7 +63,7 @@ module.exports = function (app, addon) {
                                         let aux = lines[i].split(/\s+/);
                                         languages.push({
                                             lang: aux[1],
-                                            langColor: languagesColors[aux[1]],
+                                            langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
                                             percent: aux[0]
                                         });
                                     }
