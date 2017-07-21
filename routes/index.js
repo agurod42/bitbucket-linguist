@@ -1,3 +1,5 @@
+"use strict";
+
 const exec = require('child_process').exec;
 const fs = require('fs');
 const git = require('nodegit');
