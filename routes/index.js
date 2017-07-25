@@ -100,39 +100,29 @@ function oauthTokenFromJWT(addon, req) {
 }
 
 function cloneOrPullRepo(repoPath, oauthToken) {
-    return new Promise((resolve, reject) => {
         let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
         let repoLocalPath = path.resolve(__dirname, '../tmp/', md5(repoUri));   
 
-        if (fs.existsSync(repoLocalPath)) {
-            pullRepo(repoUri, repoLocalPath, resolve, reject);
-        }
-        else {
-            cloneRepo(repoUri, repoLocalPath, resolve, reject);
-        }
+    if (fs.existsSync(repoLocalPath)) {
+        return pullRepo(repoUri, repoLocalPath);
+    }
+    else {
+        return cloneRepo(repoUri, repoLocalPath);
+    }
+}
+
+function cloneRepo(repoUri, repoLocalPath) {
+    return promisedExec('git clone ' + repoUri + ' ' + repoLocalPath, {}, stdout => {
+        return repoLocalPath;
     });
 }
 
-function cloneRepo(repoUri, repoLocalPath, resolve, reject) {
-    exec('git clone --depth 1 ' + repoUri + ' ' + repoLocalPath, function (err, stdout) {
-        if (err) {
-            reject(err);
-        }
-        else {
-            resolve(repoLocalPath);
-        }
+function pullRepo(repoUri, repoLocalPath) {
+    return promisedExec('git pull ' + repoUri, { cwd: repoLocalPath }, stdout => {
+        return repoLocalPath;
     });
 }
 
-function pullRepo(repoUri, repoLocalPath, resolve, reject) {
-    exec('git pull' + repoUri + ' ' + repoLocalPath, { cwd: repoLocalPath }, function (err, stdout) {
-        if (err) {
-            reject(err);
-        }
-        else {
-            resolve(repoLocalPath);
-        }
-    });
 }
 
 function fetchLanguages(repoLocalPath, codeStats) {
