@@ -100,8 +100,8 @@ function oauthTokenFromJWT(addon, req) {
 }
 
 function cloneOrPullRepo(repoPath, oauthToken) {
-        let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
-        let repoLocalPath = path.resolve(__dirname, '../tmp/', md5(repoUri));   
+    let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
+    let repoLocalPath = path.resolve(__dirname, '../tmp/', md5(repoPath));   
 
     if (fs.existsSync(repoLocalPath)) {
         return pullRepo(repoUri, repoLocalPath);
