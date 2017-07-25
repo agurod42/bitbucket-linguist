@@ -136,27 +136,39 @@ function pullRepo(repoUri, repoLocalPath, resolve, reject) {
 }
 
 function fetchLanguages(repoLocalPath, codeStats) {
+    return promisedExec('linguist ' + repoLocalPath, {}, stdout => {
+        let lines = stdout.trim().split('\n');
+        let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../private/data/colors.json')));
+        
+        codeStats.languages = [];
+        
+        for (var i in lines) {
+            let aux = lines[i].split(/\s+/);
+            codeStats.languages.push({
+                lang: aux[1],
+                langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
+                percent: aux[0]
+            });
+        }
+
+        return repoLocalPath;
+    });
+}
+
+function promisedExec(command, opts, stdoutCallback) {
     return new Promise((resolve, reject) => {
-        exec('linguist ' + repoLocalPath, function (err, stdout) {
+        exec(command, opts, (err, stdout) => {
             if (err) {
                 reject(err);
             }
             else {
-                let lines = stdout.trim().split('\n');
-                let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../private/data/colors.json')));
-                
-                codeStats.languages = [];
-                
-                for (var i in lines) {
-                    let aux = lines[i].split(/\s+/);
-                    codeStats.languages.push({
-                        lang: aux[1],
-                        langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
-                        percent: aux[0]
-                    });
+                try {
+                    let stdoutCallbackResponse = stdoutCallback(stdout);
+                    resolve(stdoutCallbackResponse);
                 }
-                
-                resolve(repoLocalPath);
+                catch (ex) {
+                    reject(ex);
+                }
             }
         });
     });
