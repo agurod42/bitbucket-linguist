@@ -1,6 +1,6 @@
 {
-  "name": "my-addon",
-  "version": "0.0.1",
+  "name": "github-code-stats-for-bitbucket",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": "5.12.x"

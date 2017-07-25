@@ -8,7 +8,7 @@
         // Use 'unauthorized.hbs' template for displaying an error page
         "errorTemplate": true,
         // Key of this add-on's registered OAuth consumer
-        "consumerKey": "FdYG62yMzjZvgcABM5",
+        "consumerKey": "4sHGCtW88z3hEkcw87",
         // alassian-connect-express currently integrates with JugglingDB for persistence
         // to store the host client information (i.e., client key, host public
         // key, etc). When no adapter is specified, it defaults to JugglingDB's
@@ -59,9 +59,9 @@
         // Use 'unauthorized.hbs' template for displaying an error page
         "errorTemplate": true,
         // Key of this add-on's registered OAuth consumer
-        "consumerKey": "FdYG62yMzjZvgcABM5",
+        "consumerKey": "4sHGCtW88z3hEkcw87",
         // This is the public URL to your production add-on.
-        "localBaseUrl": "https://bitbucket-code-stats.herokuapp.com",
+        "localBaseUrl": "https://github-code-stats-for-bitbuckets.herokuapp.com",
         "store": {
             "adapter": "jugglingdb",
             // You won't want to use the memory store in production, or your install

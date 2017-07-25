@@ -1,6 +1,6 @@
 {
-    "key": "bitbucket-code-stats",
-    "name": "Bitbucket Code Stats",
+    "key": "github-code-stats-for-bitbucket",
+    "name": "GitHub Code Stats for Bitbucket",
     "description": "An add-on that brings GitHub like code stats to your Bitbucket repo overview",
     "vendor": {
         "name": "Agustín Rodríguez",
@@ -30,12 +30,12 @@
         ],
         "webPanel": [
             {
-                "url": "/bitbucket-code-stats?repoPath={repo_path}",
+                "url": "/code-stats-overview?repoPath={repo_path}",
                 "name": {
-                    "value": "Bitbucket Code Stats Panel"
+                    "value": "GitHub Code Stats for Bitbucket"
                 },
                 "location": "org.bitbucket.repository.overview.informationPanel",
-                "key": "bitbucket-code-stats-panel"
+                "key": "code-stats-overview"
             }
         ]
     },

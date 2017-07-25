@@ -37,7 +37,7 @@ module.exports = function (app, addon) {
     //   1. the repository path (passed in the query string via a context parameter)
     //   2. the user who installed the add-on's display name (retrieved from Bitbucket via REST)
 
-    app.get('/bitbucket-code-stats', addon.authenticate(), function (req, res) {
+    app.get('/code-stats-overview', addon.authenticate(), function (req, res) {
 
         // the call to addon.authenticate() above verifies the JWT token provided by Bitbucket
         // in the iframe URL
@@ -70,7 +70,7 @@ module.exports = function (app, addon) {
                                         });
                                     }
                                     
-                                    res.render('bitbucket-code-stats', { languages: languages });
+                                    res.render('code-stats-overview', { languages: languages });
                                 }
                             });
                         },
