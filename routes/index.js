@@ -43,48 +43,18 @@ module.exports = function (app, addon) {
         // in the iframe URL
         
         try {
-            oauthTokenFromJWT(
-                addon, 
-                req, 
-                function (oauthToken) {
-                    cloneOrPullRepo(
-                        req.query.repoPath,
-                        oauthToken,
-                        function (repoLocalPath) {
-                            exec('linguist ' + repoLocalPath, function (err, stdout) {
-                                if (err) {
-                                    console.log(err);
-                                    res.sendStatus(501);
-                                }
-                                else {
-                                    let lines = stdout.trim().split('\n');
-                                    let languages = [];
-                                    let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../private/data/colors.json')));
+            let codeStats = {};
 
-                                    for (var i in lines) {
-                                        let aux = lines[i].split(/\s+/);
-                                        languages.push({
-                                            lang: aux[1],
-                                            langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
-                                            percent: aux[0]
-                                        });
-                                    }
-                                    
-                                    res.render('code-stats-overview', { languages: languages });
-                                }
-                            });
-                        },
-                        function (err) {
-                            console.log(err);
-                            res.sendStatus(501);
-                        }
-                    );
-                },
-                function (err) {
+            oauthTokenFromJWT(addon, req)
+                .then(oauthToken => cloneOrPullRepo(req.query.repoPath, oauthToken))
+                .then(repoLocalPath => fetchLanguages(repoLocalPath, codeStats))
+                .then(repoLocalPath => {
+                    res.render('code-stats-overview', { codeStats: codeStats });
+                })
+                .catch(err => {
                     console.log(err);
                     res.sendStatus(501);
-                }
-            );
+                });
         } 
         catch (e) {
             console.log(e);
@@ -111,38 +81,40 @@ module.exports = function (app, addon) {
 
 };
 
-function oauthTokenFromJWT(addon, req, successCb, errorCb) {
-    // $ curl -X POST -H "Authorization: JWT {jwt_token}" https://bitbucket.org/site/oauth2/access_token -d grant_type=urn:bitbucket:oauth2:jwt
-    addon.httpClient(req).post(
-        {
-            url: "/site/oauth2/access_token",
-            multipartFormData: { grant_type: "urn:bitbucket:oauth2:jwt" }
-        },
-        function (err, res, body) {
-            if (err) {
-                errorCb(err);
+function oauthTokenFromJWT(addon, req) {
+    return new Promise((resolve, reject) => {
+        addon.httpClient(req).post(
+            {
+                url: "/site/oauth2/access_token",
+                multipartFormData: { grant_type: "urn:bitbucket:oauth2:jwt" }
+            },
+            function (err, res, body) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(JSON.parse(body).access_token);
+                }
             }
-            else {
-                var data = JSON.parse(body);
-                successCb(data.access_token);
-            }
+        );
+    });
+}
+
+function cloneOrPullRepo(repoPath, oauthToken) {
+    return new Promise((resolve, reject) => {
+        let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
+        let repoLocalPath = path.resolve(__dirname, '../tmp/', md5(repoUri));   
+
+        if (fs.existsSync(repoLocalPath)) {
+            pullRepo(repoUri, repoLocalPath, resolve, reject);
         }
-    );
+        else {
+            cloneRepo(repoUri, repoLocalPath, resolve, reject);
+        }
+    });
 }
 
-function cloneOrPullRepo(repoPath, oauthToken, successCb, errorCb) {
-    let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
-    let repoLocalPath = path.resolve(__dirname, '../tmp/', md5(repoUri));   
-
-    if (fs.existsSync(repoLocalPath)) {
-        pullRepo(repoUri, repoLocalPath, successCb, errorCb);
-    }
-    else {
-        cloneRepo(repoUri, repoLocalPath, successCb, errorCb);
-    }
-}
-
-function cloneRepo(repoUri, repoLocalPath, successCb, errorCb) {
+function cloneRepo(repoUri, repoLocalPath, resolve, reject) {
     git
         .Clone(repoUri, repoLocalPath, {
             fetchOpts: {
@@ -153,14 +125,14 @@ function cloneRepo(repoUri, repoLocalPath, successCb, errorCb) {
         })
         .then(function (repo) {
             // clone succeed
-            successCb(repoLocalPath);
+            resolve(repoLocalPath);
         })
         .catch(function (err) {
-            errorCb(err);
+            reject(err);
         });
 }
 
-function pullRepo(repoUri, repoLocalPath, successCb, errorCb) {
+function pullRepo(repoUri, repoLocalPath, resolve, reject) {
     var repoLocalWorkingCopy;
 
     git
@@ -179,9 +151,36 @@ function pullRepo(repoUri, repoLocalPath, successCb, errorCb) {
         .then(function () {
             repoLocalWorkingCopy.mergeBranches('master', 'origin/master');
             // pull succeed
-            successCb(repoLocalPath);
+            resolve(repoLocalPath);
         })
         .catch(function (err) {
-            errorCb(err);
+            reject(err);
         });
+}
+
+function fetchLanguages(repoLocalPath, codeStats) {
+    return new Promise((resolve, reject) => {
+        exec('linguist ' + repoLocalPath, function (err, stdout) {
+            if (err) {
+                reject(err);
+            }
+            else {
+                let lines = stdout.trim().split('\n');
+                let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../private/data/colors.json')));
+                
+                codeStats.languages = [];
+                
+                for (var i in lines) {
+                    let aux = lines[i].split(/\s+/);
+                    codeStats.languages.push({
+                        lang: aux[1],
+                        langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
+                        percent: aux[0]
+                    });
+                }
+                
+                resolve(repoLocalPath);
+            }
+        });
+    });
 }

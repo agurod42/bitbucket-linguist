@@ -2,7 +2,7 @@
 
 <div id="code-stats-overview">
     <ol class="numbers">
-        {{#each languages}}
+        {{#each codeStats.languages}}
             <li>
                 <a>
                     <span class="lang-color" style="background: {{langColor}};"></span>
@@ -13,7 +13,7 @@
         {{/each}}
     </ol>
     <div class="graph">
-        {{#each languages}}
+        {{#each codeStats.languages}}
             <div class="lang-color" style="background: {{langColor}}; width: {{percent}}"></div>
         {{/each}}
     </div>
