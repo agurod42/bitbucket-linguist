@@ -8,23 +8,23 @@ const util = require('util');
 
 const DEFAULT_LANG_COLOR = '#CCCCCC';
 
-module.exports = function (app, addon) {
+module.exports = (app, addon) => {
     
     //healthcheck route used by micros to ensure the addon is running.
-    app.get('/healthcheck', function(req, res) {
+    app.get('/healthcheck', (req, res) => {
         res.send(200);
     });
 
     // Root route. This route will redirect to the add-on descriptor: `atlassian-connect.json`.
-    app.get('/', function (req, res) {
+    app.get('/', (req, res) => {
         res.format({
             // If the request content-type is text-html, it will decide which to serve up
-            'text/html': function () {
+            'text/html': () => {
                 res.redirect('/atlassian-connect.json');
             },
             // This logic is here to make sure that the `atlassian-connect.json` is always
             // served up when requested by the host
-            'application/json': function () {
+            'application/json': () => {
                 res.redirect('/atlassian-connect.json');
             }
         });
@@ -36,7 +36,7 @@ module.exports = function (app, addon) {
     //   1. the repository path (passed in the query string via a context parameter)
     //   2. the user who installed the add-on's display name (retrieved from Bitbucket via REST)
 
-    app.get('/code-stats-overview', addon.authenticate(), function (req, res) {
+    app.get('/code-stats-overview', addon.authenticate(), (req, res) => {
 
         // the call to addon.authenticate() above verifies the JWT token provided by Bitbucket
         // in the iframe URL
@@ -65,7 +65,7 @@ module.exports = function (app, addon) {
     // Webhook subscriptions are managed in the `modules.webhooks` section of
     // `atlassian-connect.json`
 
-    app.post('/webhook', addon.authenticate(), function (req, res) {
+    app.post('/webhook', addon.authenticate(), (req, res) => {
 
         // log the webhook payload
         console.log(util.inspect(req.body, {
