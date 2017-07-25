@@ -8,6 +8,8 @@ const util = require('util');
 
 const DEFAULT_LANG_COLOR = '#CCCCCC';
 
+let httpClient;
+
 module.exports = (app, addon) => {
     
     //healthcheck route used by micros to ensure the addon is running.
@@ -40,11 +42,13 @@ module.exports = (app, addon) => {
 
         // the call to addon.authenticate() above verifies the JWT token provided by Bitbucket
         // in the iframe URL
+
+        httpClient = addon.httpClient(req);
         
         try {
             let codeStats = {};
 
-            oauthTokenFromJWT(addon, req)
+            oauthTokenFromJWT()
                 .then(oauthToken => cloneOrPullRepo(req.query.repoPath, oauthToken))
                 .then(repoLocalPath => fetchLanguages(repoLocalPath, codeStats))
                 .then(repoLocalPath => {
@@ -80,12 +84,12 @@ module.exports = (app, addon) => {
 
 };
 
-function oauthTokenFromJWT(addon, req) {
+function oauthTokenFromJWT() {
     return new Promise((resolve, reject) => {
-        addon.httpClient(req).post(
+        httpClient.post(
             {
-                url: "/site/oauth2/access_token",
-                multipartFormData: { grant_type: "urn:bitbucket:oauth2:jwt" }
+                url: '/site/oauth2/access_token',
+                multipartFormData: { grant_type: 'urn:bitbucket:oauth2:jwt' }
             },
             function (err, res, body) {
                 if (err) {
