@@ -21,7 +21,6 @@
     "jugglingdb-sqlite3": "0.0.5",
     "md5": "^2.2.1",
     "morgan": "^1.6.1",
-    "nodegit": "^0.18.3",
     "static-expiry": ">=0.0.5"
   },
   "devDependencies": {

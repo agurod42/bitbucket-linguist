@@ -2,7 +2,6 @@
 
 const exec = require('child_process').exec;
 const fs = require('fs');
-const git = require('nodegit');
 const md5 = require('md5');
 const path = require('path');
 const util = require('util');
@@ -115,47 +114,25 @@ function cloneOrPullRepo(repoPath, oauthToken) {
 }
 
 function cloneRepo(repoUri, repoLocalPath, resolve, reject) {
-    git
-        .Clone(repoUri, repoLocalPath, {
-            fetchOpts: {
-                callbacks: {
-                    certificateCheck: 0,
-                }
-            }
-        })
-        .then(function (repo) {
-            // clone succeed
-            resolve(repoLocalPath);
-        })
-        .catch(function (err) {
+    exec('git clone --depth 1 ' + repoUri + ' ' + repoLocalPath, function (err, stdout) {
+        if (err) {
             reject(err);
-        });
+        }
+        else {
+            resolve(repoLocalPath);
+        }
+    });
 }
 
 function pullRepo(repoUri, repoLocalPath, resolve, reject) {
-    var repoLocalWorkingCopy;
-
-    git
-        .Repository
-        .open(repoLocalPath)
-        .then(function (repo) {
-            repoLocalWorkingCopy = repo;
-            return repo.fetchAll({
-                callbacks: {
-                    certificateCheck: 0,
-                }
-            })
-        })
-        // Now that we're finished fetching, go ahead and merge our local branch
-        // with the new one
-        .then(function () {
-            repoLocalWorkingCopy.mergeBranches('master', 'origin/master');
-            // pull succeed
-            resolve(repoLocalPath);
-        })
-        .catch(function (err) {
+    exec('git pull' + repoUri + ' ' + repoLocalPath, { cwd: repoLocalPath }, function (err, stdout) {
+        if (err) {
             reject(err);
-        });
+        }
+        else {
+            resolve(repoLocalPath);
+        }
+    });
 }
 
 function fetchLanguages(repoLocalPath, codeStats) {
