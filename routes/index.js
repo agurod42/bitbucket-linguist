@@ -50,6 +50,7 @@ module.exports = (app, addon) => {
 
             oauthTokenFromJWT()
                 .then(oauthToken => cloneOrPullRepo(req.query.repoPath, oauthToken))
+                .then(repoLocalPath => fetchStats(repoLocalPath, codeStats))
                 .then(repoLocalPath => fetchLanguages(repoLocalPath, codeStats))
                 .then(repoLocalPath => {
                     res.render('code-stats-overview', { codeStats: codeStats });
@@ -127,6 +128,42 @@ function pullRepo(repoUri, repoLocalPath) {
     });
 }
 
+function fetchStats(repoLocalPath, codeStats) {
+    return new Promise((resolve, reject) => {
+        let fetchCommitCountPromise = fetchCommitCount(repoLocalPath, codeStats);
+        let fetchContributorsPromise = fetchContributors(repoLocalPath, codeStats);
+
+        Promise
+            .all([fetchCommitCountPromise, fetchContributorsPromise])
+            .then(values => {
+                resolve(repoLocalPath);
+            })
+            .catch(reject);
+    });
+}
+
+function fetchCommitCount(repoLocalPath, codeStats) {
+    // https://stackoverflow.com/questions/677436/how-to-get-the-git-commit-count#comment7093558_4061706
+    return promisedExec('git rev-list --count master', { cwd: repoLocalPath }, stdout => {
+        codeStats.commitCount = parseInt(stdout.trim());
+
+        return repoLocalPath;
+    });
+}
+
+function fetchContributors(repoLocalPath, codeStats) {
+    // https://stackoverflow.com/a/33858300/3879872
+    return promisedExec('git log --all --format=\'%aE\' | sort -u', { cwd: repoLocalPath }, stdout => {
+        let lines = stdout.trim().split('\n');
+
+        codeStats.contributors = [];
+
+        for (var i in lines) {
+            codeStats.contributors.push(lines[i]);
+        }
+
+        return repoLocalPath;
+    });
 }
 
 function fetchLanguages(repoLocalPath, codeStats) {

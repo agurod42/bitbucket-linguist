@@ -1,20 +1,73 @@
 {{!< layout}}
 
 <div id="code-stats-overview">
-    <ol class="numbers">
-        {{#each codeStats.languages}}
-            <li>
-                <a>
-                    <span class="lang-color" style="background: {{langColor}};"></span>
-                    <span class="lang">{{lang}}</span>
-                    <span class="percent">{{percent}}</span>
-                </a>
-            </li>
-        {{/each}}
-    </ol>
-    <div class="graph">
+    <div class="stats-overview">
+        <div class="stats-switcher">
+            <ol class="repo-stats">
+                <li>
+                    <a>
+                        <i class="aui-icon aui-icon-small aui-iconfont-devtools-commit"></i>
+                        <span class="number">{{codeStats.commitCount}}</span> commits
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <i class="aui-icon aui-icon-small aui-iconfont-group"></i>
+                        <span class="number">{{codeStats.contributors.length}}</span> contributors
+                    </a>
+                </li>
+            </ol>
+            <ol class="languages-stats">
+                {{#each codeStats.languages}}
+                    <li>
+                        <a>
+                            <span class="lang-color" style="background: {{langColor}};"></span>
+                            <span class="lang">{{lang}}</span>
+                            <span class="percent">{{percent}}</span>
+                        </a>
+                    </li>
+                {{/each}}
+            </ol>
+        </div>
+    </div>
+    <div class="languages-graph">
         {{#each codeStats.languages}}
             <div class="lang-color" style="background: {{langColor}}; width: {{percent}}"></div>
         {{/each}}
     </div>
 </div>
+
+<script>
+
+function toggleLanguageStats() {
+    var $statsSwitcher = document.getElementsByClassName('stats-switcher')[0];
+
+    if ($statsSwitcher.classList) { 
+        $statsSwitcher.classList.toggle('show-language-stats');
+    } 
+    else {
+        // For IE9
+        var classes = $statsSwitcher.className.split(' ');
+        var i = classes.indexOf('show-language-stats');
+
+        if (i >= 0) { 
+            classes.splice(i, 1);
+        }
+        else { 
+            classes.push('show-language-stats');
+        }
+
+        $statsSwitcher.className = classes.join(' '); 
+    }
+}
+
+var $languageGraph = document.getElementsByClassName('languages-graph')[0];
+
+if ($languageGraph.addEventListener) {                    // For all major browsers, except IE 8 and earlier
+    $languageGraph.addEventListener('click', toggleLanguageStats);
+} 
+else if ($languageGraph.attachEvent) {                  // For IE 8 and earlier versions
+    $languageGraph.attachEvent('onclick', toggleLanguageStats);
+}
+
+</script>

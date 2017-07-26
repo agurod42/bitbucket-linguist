@@ -4,9 +4,25 @@
   width: 100%;
 }
 
+#code-stats-overview .stats-overview {
+  max-height: 40px;
+  overflow: hidden;
+}
+
+#code-stats-overview .stats-overview .stats-switcher {
+  transition: all 0.4s ease-in-out;
+  position: relative;
+  top: 0;
+}
+
+#code-stats-overview .stats-overview .stats-switcher.show-language-stats {
+  top: -40px;
+}
+
 #code-stats-overview ol {
   display: flex;
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -17,15 +33,28 @@
 }
 
 #code-stats-overview ol li a:hover {
+  cursor: pointer;
   text-decoration: none;
 }
 
-#code-stats-overview ol li a .lang {
-  color: black;
-  font-weight: bold;
+#code-stats-overview .repo-stats li a {
+  color: #6a737d;
 }
 
-#code-stats-overview ol li a .lang-color {
+#code-stats-overview .repo-stats li a:hover {
+  color: #0747A6;
+}
+
+#code-stats-overview .repo-stats li a:not(:hover) .number {
+  color: black;
+}
+
+#code-stats-overview .languages-stats li a .lang {
+  color: black;
+  /*font-weight: bold;*/
+}
+
+#code-stats-overview .languages-stats li a .lang-color {
   background: black;
   border-radius: 50%;
   display: inline-block;
@@ -33,17 +62,23 @@
   width: 10px;
 }
 
-#code-stats-overview ol li a .percent {
+#code-stats-overview .languages-stats li a .percent {
   color: #6a737d;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
-#code-stats-overview .graph .lang-color {
+#code-stats-overview .languages-graph {
+  cursor: pointer;
+  height: 8px;
+  overflow: hidden;
+}
+
+#code-stats-overview .languages-graph .lang-color {
   float: left;
   height: 8px;
 }
 
-#code-stats-overview .graph::after {
+#code-stats-overview .languages-graph::after {
   clear: both;
   content: ' ';
   display: table;
