@@ -4,6 +4,7 @@ const exec = require('child_process').exec;
 const fs = require('fs');
 const md5 = require('md5');
 const path = require('path');
+const present = require('present');
 const util = require('util');
 
 const DEFAULT_LANG_COLOR = '#CCCCCC';
@@ -120,13 +121,21 @@ function cloneOrPullRepo(repoPath, oauthToken) {
 }
 
 function cloneRepo(repoUri, repoLocalPath) {
+    let t = present();
+    console.log('cloneRepo (' + repoLocalPath + ') has started');
+
     return promisedExec('git clone ' + repoUri + ' ' + repoLocalPath, {}, stdout => {
+        console.log('cloneRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
         return repoLocalPath;
     });
 }
 
 function pullRepo(repoUri, repoLocalPath) {
+    let t = present();
+    console.log('pullRepo (' + repoLocalPath + ') has started');
+
     return promisedExec('git pull ' + repoUri, { cwd: repoLocalPath }, stdout => {
+        console.log('pullRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
         return repoLocalPath;
     });
 }
@@ -146,15 +155,23 @@ function fetchStats(repoLocalPath, codeStats) {
 }
 
 function fetchCommitCount(repoLocalPath, codeStats) {
+    let t = present();
+    console.log('fetchCommitCount (' + repoLocalPath + ') has started');
+
     // https://stackoverflow.com/questions/677436/how-to-get-the-git-commit-count#comment7093558_4061706
     return promisedExec('git rev-list --count master', { cwd: repoLocalPath }, stdout => {
         codeStats.commitCount = parseInt(stdout.trim());
+
+        console.log('fetchCommitCount (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
 
         return repoLocalPath;
     });
 }
 
 function fetchContributors(repoLocalPath, codeStats) {
+    let t = present();
+    console.log('fetchContributors (' + repoLocalPath + ') has started');
+
     // https://stackoverflow.com/a/33858300/3879872
     return promisedExec('git log --all --format=\'%aE\' | sort -u', { cwd: repoLocalPath }, stdout => {
         let lines = stdout.trim().split('\n');
@@ -165,11 +182,16 @@ function fetchContributors(repoLocalPath, codeStats) {
             codeStats.contributors.push(lines[i]);
         }
 
+        console.log('fetchContributors (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
+
         return repoLocalPath;
     });
 }
 
 function fetchLanguages(repoLocalPath, codeStats) {
+    let t = present();
+    console.log('fetchLanguages (' + repoLocalPath + ') has started');
+
     return promisedExec('linguist ' + repoLocalPath, {}, stdout => {
         let lines = stdout.trim().split('\n');
         let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../private/data/colors.json')));
@@ -184,6 +206,8 @@ function fetchLanguages(repoLocalPath, codeStats) {
                 percent: aux[0]
             });
         }
+
+        console.log('fetchLanguages (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
 
         return repoLocalPath;
     });
