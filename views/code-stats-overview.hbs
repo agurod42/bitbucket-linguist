@@ -63,10 +63,10 @@ function toggleLanguageStats() {
 
 var $languageGraph = document.getElementsByClassName('languages-graph')[0];
 
-if ($languageGraph.addEventListener) {                    // For all major browsers, except IE 8 and earlier
+if ($languageGraph.addEventListener) { // For all major browsers, except IE 8 and earlier
     $languageGraph.addEventListener('click', toggleLanguageStats);
 } 
-else if ($languageGraph.attachEvent) {                  // For IE 8 and earlier versions
+else if ($languageGraph.attachEvent) { // For IE 8 and earlier versions
     $languageGraph.attachEvent('onclick', toggleLanguageStats);
 }
 
