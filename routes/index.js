@@ -53,7 +53,10 @@ module.exports = (app, addon) => {
                 .then(repoLocalPath => fetchStats(repoLocalPath, codeStats))
                 .then(repoLocalPath => fetchLanguages(repoLocalPath, codeStats))
                 .then(repoLocalPath => {
-                    res.render('code-stats-overview', { codeStats: codeStats });
+                    res.render('code-stats-overview', { 
+                        codeStats: codeStats,
+                        repoPath: req.query.repoPath
+                    });
                 })
                 .catch(err => {
                     console.log(err);
