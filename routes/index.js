@@ -1,5 +1,6 @@
 "use strict";
 
+const controllers = require('./controllers');
 const util = require('util');
 
 module.exports = (app, addon) => {
@@ -35,8 +36,7 @@ module.exports = (app, addon) => {
         // the call to addon.authenticate() above verifies the JWT token provided by Bitbucket
         // in the iframe URL
 
-        let overview = require('./overview');
-        overview(addon, req, res);
+        controllers.overview(addon, req, res);
 
     });
 
