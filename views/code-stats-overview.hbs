@@ -13,7 +13,8 @@
                 <li>
                     <a>
                         <i class="aui-icon aui-icon-small aui-iconfont-group"></i>
-                        <span class="number">{{codeStats.contributors.length}}</span> contributors
+                        <span class="number">{{codeStats.contributors.length}}</span>
+                        {{#if codeStats.singleContributor}}contributor{{else}}contributors{{/if}}
                     </a>
                 </li>
             </ol>

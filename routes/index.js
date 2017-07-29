@@ -182,6 +182,8 @@ function fetchContributors(repoLocalPath, codeStats) {
             codeStats.contributors.push(lines[i]);
         }
 
+        codeStats.singleContributor = codeStats.contributors.length == 1;
+
         console.log('fetchContributors (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
 
         return repoLocalPath;
