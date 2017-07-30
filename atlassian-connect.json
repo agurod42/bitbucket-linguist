@@ -27,6 +27,17 @@
         "webItem": [
         ],
         "repoPage": [
+            {
+                "url": "/code-stats-contributors?repoPath={repo_path}",
+                "name": {
+                    "value": "Contributors"
+                },
+                "location": "org.bitbucket.repository.navigation",
+                "key": "code-stats-contributors",
+                "params": {
+                    "auiIcon": "aui-iconfont-admin-roles"
+                }
+            }
         ],
         "webPanel": [
             {

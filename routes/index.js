@@ -31,6 +31,12 @@ module.exports = (app, addon) => {
     //   1. the repository path (passed in the query string via a context parameter)
     //   2. the user who installed the add-on's display name (retrieved from Bitbucket via REST)
 
+    app.get('/code-stats-contributors', addon.authenticate(), (req, res) => {
+
+        controllers.contributors(addon, req, res);
+
+    });
+
     app.get('/code-stats-overview', addon.authenticate(), (req, res) => {
 
         // the call to addon.authenticate() above verifies the JWT token provided by Bitbucket

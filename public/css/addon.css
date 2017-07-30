@@ -1,4 +1,7 @@
 /* add-on styles */
+
+/*** overview ***/
+
 #code-stats-overview {
   background: white;
   width: 100%;
@@ -82,4 +85,94 @@
   clear: both;
   content: ' ';
   display: table;
+}
+
+/*** contributors ***/
+
+#code-stats-contributors {
+  background: white;
+  padding: 20px;
+  padding-top: 56px; /* until we have the breadcump */
+}
+
+#code-stats-contributors h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 1.71428571em;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+#code-stats-contributors #contributors-cards {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 20px 0;
+  width: 100%;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card {
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  width: 50%;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .wrapper {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title {
+  padding: 10px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title::after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title .avatar {
+  display: block;
+  float: left;
+  height: 36px;
+  width: 36px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title .avatar img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title h3 {
+  clear: right;
+  float: left;
+  font-size: 14px;
+  margin: 0;
+  margin-left: 10px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .title h3 .meta {
+  color: #6a737d;
+  display: block;
+  font-size: 11px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .graph {
+  background: #F4F5F7;
+  border-top: 1px solid #ccc;
+  padding: 8px 0;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .graph g {
+  display: block;
+  width: 100%;
+  height: 160px;
+}
+
+#code-stats-contributors #contributors-cards .contributor-card .graph g .main-svg .cartesianlayer .gridlayer .xgrid {
+  display: none;
 }
