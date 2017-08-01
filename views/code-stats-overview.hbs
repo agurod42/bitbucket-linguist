@@ -40,8 +40,25 @@
 
 <script>
 
+$(document).on('ready', function () {
+    var othersPercent = 0;
 
+    $('#code-stats-overview .languages-stats li:nth-child(n+6)').each(function () {
+        var $li = $(this).hide();
+        var $liPercent = $li.find('a .percent').text();
+        othersPercent += parseFloat($liPercent);
+    });
 
+    $('#code-stats-overview .languages-stats li:nth-child(5)').after(
+        '<li>'                                                                    +
+            '<a>'                                                                 +
+                '<span class="lang-color" style="background: #cccccc;"></span>'   +
+                '<span class="lang">Others</span>'                                +
+                '<span class="percent">' + othersPercent + '%</span>'             +
+            '</a>'                                                                +
+        '</li>'
+    );
+});
 
 $('.languages-graph').on('click', function () {
     $('.stats-switcher').toggleClass('show-language-stats');

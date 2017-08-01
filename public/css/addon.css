@@ -52,6 +52,10 @@
   color: black;
 }
 
+#code-stats-overview .languages-stats li a {
+  white-space: nowrap;
+}
+
 #code-stats-overview .languages-stats li a .lang {
   color: black;
   /*font-weight: bold;*/
