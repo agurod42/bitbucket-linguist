@@ -2,7 +2,7 @@ require 'git_stats'
 require 'json'
 
 repo = GitStats::GitData::Repo.new(path: ARGV[0])
-res = { :authors => Hash.new }
+res = { :authors => Hash.new, :project => { :commits => Hash.new, :maxCommitsInADay => 0 } }
 
 for author in repo.authors.sort_by { |author| [-author.commits.length] }
 
@@ -22,6 +22,11 @@ for author in repo.authors.sort_by { |author| [-author.commits.length] }
         end
         
         res[:authors][author.email][:commits][date] = res[:authors][author.email][:commits].has_key?(date) ? res[:authors][author.email][:commits][date] + 1 : 1
+        res[:project][:commits][date] = res[:project][:commits].has_key?(date) ? res[:project][:commits][date] + 1 : 1
+
+        if res[:authors][author.email][:commits][date] > res[:project][:maxCommitsInADay]
+            res[:project][:maxCommitsInADay] = res[:authors][author.email][:commits][date]
+        end
     end
 
 end

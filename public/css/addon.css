@@ -102,6 +102,33 @@
   margin: 0;
 }
 
+#code-stats-contributors #project-card {
+  display: inline-block;
+  margin: 0;
+  padding: 20px 0 0 0;
+  width: 100%;
+}
+
+#code-stats-contributors #project-card .graph {
+  background: #F4F5F7;
+  border-radius: 3px;
+  padding: 8px 0;
+}
+
+#code-stats-contributors #project-card .graph g {
+  display: block;
+  width: 100%;
+  height: 200px;
+}
+
+#code-stats-contributors #project-card .graph g .main-svg .cartesianlayer .yaxislayer-above .ytick:first-child {
+  display: none;
+}
+
+#code-stats-contributors #project-card .graph g .main-svg .cartesianlayer .zerolinelayer path {
+  stroke: #e6e6e6 !important;
+}
+
 #code-stats-contributors #contributors-cards {
   display: inline-block;
   list-style: none;
