@@ -42,7 +42,7 @@
         }
         
         // create dom objects
-        var contributorId = 'contributor-graph ' + md5(authorKey);
+        var contributorId = 'contributor-graph-' + md5(authorKey);
         var contributorAvatar = 'https://d301sr5gafysq2.cloudfront.net/8d5f806505b4/img/default_avatar/user_blue.svg';
 
         var $contributorCard = $('                                                                          \
@@ -63,6 +63,7 @@
                 </div>                                                                                      \
             </li>'
         );
+
         var $contributorGraph = $('<g id="' + contributorId + '"></g>');
         
         $contributorCard.find('.graph').append($contributorGraph);
@@ -82,22 +83,37 @@
                         width: 0
                     },
                     fill: 'tozeroy',
+                    fillcolor: '#42526E',
                     connectgaps: false
                 }
             ],
             // layout
             {
                 autosize: true,
-                fillColor: 'darkyellow',
                 margin: {
-                    l: 24, b: 32, r: 0, t: 0
+                    l: 10, b: 24, r: 0, t: 0
                 },
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 xaxis: {
+                    showgrid: false,
+                    showline: false,
+                    tickcolor: '#e6e6e6',
+                    tickfont: {
+                        color: '#6a737d',
+                        size: 10,
+                    },
+                    ticklen: 4,
+                    ticks: 'outside',
+                    zerolinewidth: 1
                 },
                 yaxis: {
-                    showline: false
+                    gridcolor: '#e6e6e6',
+                    tickfont: {
+                        color: '#6a737d',
+                        size: 10,
+                    },
+                    ticks: 'hidden'
                 }
             },
             // options
@@ -105,6 +121,8 @@
                 staticPlot: true,
             }
         );
+
+        $('#' + contributorId + ' .main-svg .cartesianlayer .yaxislayer-above').attr('transform', 'translate(' + ($contributorGraph.outerWidth() / 2 + 6.5) + ',0)');
 
         // next contributor...
         i++;
