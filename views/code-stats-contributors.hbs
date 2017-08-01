@@ -1,15 +1,28 @@
 {{!< layout}}
 
 <div id="code-stats-contributors">
-    <h1>Contributors</h1>
-    <ol id="contributors-cards"></ol>
+    <header class="aui-page-header">
+        <div class="aui-page-header-inner">
+            <div class="aui-page-header-main">
+                <ol class="aui-nav aui-nav-breadcrumbs">
+                    <li><a href="https://bitbucket.org/{{repo.owner.username}}" target="_top">{{repo.owner.name}}</a></li>
+                    {{#if repo.project.key}}
+                        <li><a href="https://bitbucket.org/account/user/{{repo.owner.username}}/projects/{{repo.project.key}}" target="_top">{{repo.project.name}}</a></li>
+                    {{/if}}
+                    <li><a href="https://bitbucket.org/{{repo.path}}" target="_top">{{repo.name}}</a></li>
+                </ol>
+                <h1>Contributors</h1>
+            </div>
+        </div>
+    </header>
+    <ol id="contributors-cards">
+    </ol>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{{furl '/js/md5.min.js'}}"></script>
-<script>
 
+<script>
     var i = 1;
     var data = {{{data}}};
     var minDate = new Date(data.min_date);
@@ -96,5 +109,4 @@
         // next contributor...
         i++;
     }
-
 </script>

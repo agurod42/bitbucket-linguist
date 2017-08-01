@@ -9,9 +9,10 @@ const DEFAULT_LANG_COLOR = '#CCCCCC';
 const LANG_COLORS_FILE = '../../../private/data/colors.json';
 
 let repoLocalPath;
+
 let codeStats = {};
 
-module.exports = (req, res, repoPath) => {
+module.exports = (addon, req, res, repoPath) => {
     repoLocalPath = repoPath;
 
     return new Promise((resolve, reject) => {

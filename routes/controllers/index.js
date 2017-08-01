@@ -29,7 +29,7 @@ function handleRequest(addon, req, res, handler) {
 
         oauthTokenFromJWT()
             .then(oauthToken => cloneOrPullRepo(req.query.repoPath, oauthToken))
-            .then(repoLocalPath => handler(req, res, repoLocalPath))
+            .then(repoLocalPath => handler(addon, req, res, repoLocalPath))
             .catch(err => {
                 console.log(err);
                 res.sendStatus(501);
