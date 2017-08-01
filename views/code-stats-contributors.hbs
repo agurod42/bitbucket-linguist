@@ -10,10 +10,11 @@
 <script src="{{furl '/js/md5.min.js'}}"></script>
 <script>
 
+    var i = 1;
     var data = {{{data}}};
     var minDate = new Date(data.min_date);
     var maxDate = new Date(data.max_date);
-    
+
     var $contributorsCards = $('#contributors-cards');
 
     for (var authorKey in data.authors) {
@@ -24,26 +25,29 @@
         for (var day = new Date(minDate.getTime()); day <= maxDate; day.setDate(day.getDate() + 1)) {
             var dayISOString = day.toISOString().substr(0, 10);
             dates.push(dayISOString);
-            values.push(data.authors[authorKey][dayISOString] || 0);
+            values.push(data.authors[authorKey].commits[dayISOString] || 0);
         }
         
         // create dom objects
         var contributorId = 'contributor-graph ' + md5(authorKey);
         var contributorAvatar = 'https://d301sr5gafysq2.cloudfront.net/8d5f806505b4/img/default_avatar/user_blue.svg';
 
-        var $contributorCard = $('                                                  \
-            <li class="contributor-card">                                           \
-                <div class="wrapper">                                               \
-                    <section class="title">                                         \
-                        <div class="avatar">                                        \
-                            <img alt="" src="' + contributorAvatar + '" class="">   \
-                        </div>                                                      \
-                        <h3>' + authorKey + '                                       \
-                            <span class="meta">commits</span>                       \
-                        </h3>                                                       \
-                    </section>                                                      \
-                    <section class="graph"></section>                               \
-                </div>                                                              \
+        var $contributorCard = $('                                                                          \
+            <li class="contributor-card">                                                                   \
+                <div class="wrapper">                                                                       \
+                    <section class="title">                                                                 \
+                        <span class="avatar aui-avatar aui-avatar-medium">                                  \
+                            <span class="aui-avatar-inner">                                                 \
+                                <img src="' + contributorAvatar + '">                                       \
+                            </span>                                                                         \
+                        </span>                                                                             \
+                        <h3>' + authorKey + '                                                               \
+                            <span class="meta">' + data.authors[authorKey].commitsCount + ' commits</span>  \
+                        </h3>                                                                               \
+                        <span class="rank">#' + i + '</span>                                                \
+                    </section>                                                                              \
+                    <section class="graph"></section>                                                       \
+                </div>                                                                                      \
             </li>'
         );
         var $contributorGraph = $('<g id="' + contributorId + '"></g>');
@@ -88,6 +92,9 @@
                 staticPlot: true,
             }
         );
+
+        // next contributor...
+        i++;
     }
 
 </script>

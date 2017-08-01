@@ -7,7 +7,7 @@ res = { :authors => Hash.new }
 for author in repo.authors
 
     if !res[:authors][author.email].present?
-        res[:authors][author.email] = Hash.new
+        res[:authors][author.email] = { :commits => Hash.new, :commitsCount => author.commits.length }
     end
     
     for commit in author.commits
@@ -21,7 +21,7 @@ for author in repo.authors
             res[:max_date] = date
         end
         
-        res[:authors][author.email][date] = res[:authors][author.email].has_key?(date) ? res[:authors][author.email][date] + 1 : 1
+        res[:authors][author.email][:commits][date] = res[:authors][author.email][:commits].has_key?(date) ? res[:authors][author.email][:commits][date] + 1 : 1
     end
 
 end
