@@ -4,7 +4,7 @@ require 'json'
 repo = GitStats::GitData::Repo.new(path: ARGV[0])
 res = { :authors => Hash.new }
 
-for author in repo.authors
+for author in repo.authors.sort_by { |author| [-author.commits.length] }
 
     if !res[:authors][author.email].present?
         res[:authors][author.email] = { :commits => Hash.new, :commitsCount => author.commits.length }
