@@ -40,35 +40,11 @@
 
 <script>
 
-function toggleLanguageStats() {
-    var $statsSwitcher = document.getElementsByClassName('stats-switcher')[0];
 
-    if ($statsSwitcher.classList) { 
-        $statsSwitcher.classList.toggle('show-language-stats');
-    } 
-    else {
-        // For IE9
-        var classes = $statsSwitcher.className.split(' ');
-        var i = classes.indexOf('show-language-stats');
 
-        if (i >= 0) { 
-            classes.splice(i, 1);
-        }
-        else { 
-            classes.push('show-language-stats');
-        }
 
-        $statsSwitcher.className = classes.join(' '); 
-    }
-}
-
-var $languageGraph = document.getElementsByClassName('languages-graph')[0];
-
-if ($languageGraph.addEventListener) { // For all major browsers, except IE 8 and earlier
-    $languageGraph.addEventListener('click', toggleLanguageStats);
-} 
-else if ($languageGraph.attachEvent) { // For IE 8 and earlier versions
-    $languageGraph.attachEvent('onclick', toggleLanguageStats);
-}
+$('.languages-graph').on('click', function () {
+    $('.stats-switcher').toggleClass('show-language-stats');
+});
 
 </script>
