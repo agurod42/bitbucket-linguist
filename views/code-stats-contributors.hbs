@@ -15,11 +15,12 @@
             </div>
         </div>
     </header>
-    <div id="project-card">
+    <section id="project-card">
         <section class="graph"></section>
-    </div>
-    <ol id="contributors-cards">
-    </ol>
+    </section>
+    <section id="contributors-cards">
+        <ol></ol>
+    </section>
 </div>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -110,7 +111,7 @@
 
     function createContributorsCharts(data, minDate, maxDate) {
         var i = 1;
-        var $contributorsCards = $('#contributors-cards');
+        var $contributorsCards = $('#contributors-cards ol');
 
         for (var authorKey in data.authors) {
             // generate data
