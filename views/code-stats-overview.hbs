@@ -18,53 +18,57 @@
                     </a>
                 </li>
             </ol>
-            <ol class="languages-stats">
-                {{#each codeStats.languages}}
-                    <li>
-                        <a>
-                            <span class="lang-color" style="background: {{langColor}};"></span>
-                            <span class="lang">{{lang}}</span>
-                            <span class="percent">{{percent}}</span>
-                        </a>
-                    </li>
-                {{/each}}
-            </ol>
+            {{#if codeStats.languages}}
+                <ol class="languages-stats">
+                    {{#each codeStats.languages}}
+                        <li>
+                            <a>
+                                <span class="lang-color" style="background: {{langColor}};"></span>
+                                <span class="lang">{{lang}}</span>
+                                <span class="percent">{{percent}}</span>
+                            </a>
+                        </li>
+                    {{/each}}
+                </ol>
+            {{/if}}
         </div>
     </div>
-    <div class="languages-graph">
-        {{#each codeStats.languages}}
-            <div class="lang-color" style="background: {{langColor}}; width: {{percent}}"></div>
-        {{/each}}
-    </div>
+    {{#if codeStats.languages}}
+        <div class="languages-graph">
+            {{#each codeStats.languages}}
+                <div class="lang-color" style="background: {{langColor}}; width: {{percent}}"></div>
+            {{/each}}
+        </div>
+    {{/if}}
 </div>
 
-<script>
+{{#if codeStats.languages}}
+    <script>
+        $(document).on('ready', function () {
+            var othersPercent = 0;
+            var $othersLanguages = $('#code-stats-overview .languages-stats li:nth-child(n+6)');
 
-$(document).on('ready', function () {
-    var othersPercent = 0;
-    var $othersLanguages = $('#code-stats-overview .languages-stats li:nth-child(n+6)');
+            $othersLanguages.each(function () {
+                var $li = $(this).hide();
+                var $liPercent = $li.find('a .percent').text();
+                othersPercent += parseFloat($liPercent);
+            });
 
-    $othersLanguages.each(function () {
-        var $li = $(this).hide();
-        var $liPercent = $li.find('a .percent').text();
-        othersPercent += parseFloat($liPercent);
-    });
+            if ($othersLanguages.length) {
+                $('#code-stats-overview .languages-stats li:nth-child(5)').after(
+                    '<li>'                                                                    +
+                        '<a>'                                                                 +
+                            '<span class="lang-color" style="background: #cccccc;"></span>'   +
+                            '<span class="lang">Others</span>'                                +
+                            '<span class="percent">' + othersPercent + '%</span>'             +
+                        '</a>'                                                                +
+                    '</li>'
+                );
+            }
+        });
 
-    if ($othersLanguages.length) {
-        $('#code-stats-overview .languages-stats li:nth-child(5)').after(
-            '<li>'                                                                    +
-                '<a>'                                                                 +
-                    '<span class="lang-color" style="background: #cccccc;"></span>'   +
-                    '<span class="lang">Others</span>'                                +
-                    '<span class="percent">' + othersPercent + '%</span>'             +
-                '</a>'                                                                +
-            '</li>'
-        );
-    }
-});
-
-$('.languages-graph').on('click', function () {
-    $('.stats-switcher').toggleClass('show-language-stats');
-});
-
-</script>
+        $('.languages-graph').on('click', function () {
+            $('.stats-switcher').toggleClass('show-language-stats');
+        });
+    </script>
+{{/if}}

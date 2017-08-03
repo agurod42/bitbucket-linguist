@@ -90,12 +90,14 @@ function fetchLanguages() {
         codeStats.languages = [];
         
         for (var i in lines) {
-            let aux = lines[i].split(/\s+/);
-            codeStats.languages.push({
-                lang: aux[1],
-                langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
-                percent: aux[0]
-            });
+            if (lines[i] != '') {
+                let aux = lines[i].split(/\s+/);
+                codeStats.languages.push({
+                    lang: aux[1],
+                    langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
+                    percent: aux[0]
+                });
+            }  
         }
 
         console.log('fetchLanguages (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
