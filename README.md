@@ -21,7 +21,7 @@ It's an add-on that brings GitHub like code stats to your Bitbucket repo overvie
 - [x] Show more stats (number of commits, contributors, etc)
 - [ ] Show files written in each of the calculated languages
 - [ ] Show progress bars
-- [ ] Improve cache management
+- [ ] Improve cache management (Maybe providing a mechanism to store your repo's cache in your own server)
 - [ ] Improve error handling
 
 Any idea? [Open an issue](https://github.com/agurz/github-code-stats-for-bitbucket/issues/new)
