@@ -19,6 +19,7 @@
     "express-hbs": "*",
     "jugglingdb-postgres": "^0.1.0",
     "jugglingdb-sqlite3": "0.0.5",
+    "locks": "^0.2.2",
     "md5": "^2.2.1",
     "morgan": "^1.6.1",
     "present": "^1.0.0",

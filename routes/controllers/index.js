@@ -1,12 +1,16 @@
 "use strict";
 
 const fs = require('fs');
+const locks = require('locks');
 const md5 = require('md5');
 const path = require('path');
 const present = require('present');
 const promisedExec = require('../shared/promisedExec');
 
+const LOCK_TIMEOUT = 120000; // 2 mins
+
 let httpClient;
+let mutex = {};
 
 module.exports = {
 
@@ -65,6 +69,11 @@ function cloneOrPullRepo(repoPath, oauthToken) {
     let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
     let repoLocalPath = path.resolve(__dirname, '../../tmp/', md5(repoPath));   
 
+    if (!mutex[repoLocalPath]) {
+        mutex[repoLocalPath] = locks.createMutex();
+        console.log('mutex (' + repoLocalPath + ') created');
+    }
+
     if (fs.existsSync(repoLocalPath)) {
         return pullRepo(repoUri, repoLocalPath);
     }
@@ -74,21 +83,53 @@ function cloneOrPullRepo(repoPath, oauthToken) {
 }
 
 function cloneRepo(repoUri, repoLocalPath) {
-    let t = present();
-    console.log('cloneRepo (' + repoLocalPath + ') has started');
+    return new Promise((resolve, reject) => {
 
-    return promisedExec('git clone ' + repoUri + ' ' + repoLocalPath, {}, stdout => {
-        console.log('cloneRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
-        return repoLocalPath;
+        mutex[repoLocalPath].timedLock(LOCK_TIMEOUT, (err) => {
+            if (err) reject(err);
+
+            let t = present();
+            console.log('cloneRepo (' + repoLocalPath + ') has started');
+
+            let cloneRepoPromise = promisedExec(
+                'git clone ' + repoUri + ' ' + repoLocalPath, 
+                {}, 
+                stdout => {
+                    mutex[repoLocalPath].unlock();
+                    console.log('cloneRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
+                    resolve(repoLocalPath);
+                }
+            );
+
+            cloneRepoPromise.catch(reject);
+
+        });
+
     });
 }
 
 function pullRepo(repoUri, repoLocalPath) {
-    let t = present();
-    console.log('pullRepo (' + repoLocalPath + ') has started');
+    return new Promise((resolve, reject) => {
 
-    return promisedExec('git pull ' + repoUri, { cwd: repoLocalPath }, stdout => {
-        console.log('pullRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
-        return repoLocalPath;
+        mutex[repoLocalPath].timedLock(LOCK_TIMEOUT, (err) => {
+            if (err) reject(err);
+
+            let t = present();
+            console.log('pullRepo (' + repoLocalPath + ') has started');
+
+            let pullRepoPromise = promisedExec(
+                'git pull ' + repoUri, 
+                { cwd: repoLocalPath }, 
+                stdout => {
+                    mutex[repoLocalPath].unlock();
+                    console.log('pullRepo (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
+                    resolve(repoLocalPath);
+                }
+            );
+
+            pullRepoPromise.catch(reject);
+
+        });
+
     });
 }
