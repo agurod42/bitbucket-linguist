@@ -131,9 +131,15 @@
 
 #code-stats-contributors #contributors-cards {
   display: inline-block;
+  padding: 20px 0;
+  width: 100%;
+}
+
+#code-stats-contributors #contributors-cards ol {
+  display: inline-block;
   list-style: none;
   margin: 0;
-  padding: 20px 0;
+  padding: 0;
   width: 100%;
 }
 
