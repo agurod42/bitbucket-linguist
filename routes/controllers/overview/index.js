@@ -128,9 +128,14 @@ function fetchLanguages(repoPath, oauthToken) {
         return Promise.resolve(fs.readJSONSync(languagesFile));
     }
     else {
+        let _repoLocalPath = '';
         return  cloneRepo(repoPath, oauthToken)
-                .then(githubLinguist)
+                .then((repoLocalPath) => {
+                    _repoLocalPath = repoLocalPath;
+                    return githubLinguist(repoLocalPath);
+                })
                 .then((languages) => {
+                    fs.removeSync(_repoLocalPath);
                     fs.writeJSONSync(languagesFile, languages);
                     return languages;
                 });
