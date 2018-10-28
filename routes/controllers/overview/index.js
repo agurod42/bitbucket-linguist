@@ -36,9 +36,9 @@ module.exports = (addon, httpClient, oauthToken, query, res) => {
                         res.render('code-stats-overview', { 
                             codeStats: {
                                 branchesCount: values[0],
-                                branchesCountPlural: values[0].length > 1,
+                                branchesCountPlural: values[0] > 1,
                                 commitsCount: values[1],
-                                commitsCountPlural: values[1].length > 1,
+                                commitsCountPlural: values[1] > 1,
                                 languages: values[2]
                             },
                             repoPath: query.repoPath
