@@ -7,16 +7,26 @@
                 <li>
                     <a href="https://bitbucket.org/{{repoPath}}/commits" target="_top">
                         <i class="aui-icon aui-icon-small aui-iconfont-devtools-commit"></i>
-                        <span class="number">{{codeStats.commitCount}}</span> commits
+                        <span class="number">{{codeStats.commitsCount}}</span>
+                        commit{{#if codeStats.commitsCountPlural}}s{{/if}}
                     </a>
                 </li>
                 <li>
-                    <a href="https://bitbucket.org/{{repoPath}}/addon/bitbucket-graphs/graphs-repo-page" target="_top">
-                        <i class="aui-icon aui-icon-small aui-iconfont-admin-roles"></i>
-                        <span class="number">{{codeStats.contributors.length}}</span>
-                        {{#if codeStats.singleContributor}}contributor{{else}}contributors{{/if}}
+                    <a href="https://bitbucket.org/{{repoPath}}/branches" target="_top">
+                        <i class="aui-icon aui-icon-small aui-iconfont-devtools-branch"></i>
+                        <span class="number">{{codeStats.branchesCount}}</span>
+                        branch{{#if codeStats.branchesCountPlural}}es{{/if}}
                     </a>
                 </li>
+                <!--
+                <li>
+                    <a href="https://bitbucket.org/{{repoPath}}/addon/bitbucket-graphs/graphs-repo-page" target="_top">
+                        <i class="aui-icon aui-icon-small aui-iconfont-admin-roles"></i>
+                        <span class="number">{{codeStats.contributorsCount}}</span>
+                        contributor{{#if codeStats.contributorsCountPlural}}s{{/if}}
+                    </a>
+                </li>
+                -->
             </ol>
             {{#if codeStats.languages}}
                 <ol class="languages-stats">

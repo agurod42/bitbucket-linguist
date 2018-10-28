@@ -17,13 +17,13 @@
     "errorhandler": "^1.4.2",
     "express": "^4.13.3",
     "express-hbs": "*",
+    "fs-extra": "^7.0.0",
     "jugglingdb-postgres": "^0.1.0",
     "jugglingdb-sqlite3": "0.0.5",
-    "locks": "^0.2.2",
-    "md5": "^2.2.1",
     "morgan": "^1.6.1",
     "present": "^1.0.0",
-    "static-expiry": ">=0.0.5"
+    "static-expiry": ">=0.0.5",
+    "tmp": "0.0.33"
   },
   "devDependencies": {
     "mocha": "^2.3.4"

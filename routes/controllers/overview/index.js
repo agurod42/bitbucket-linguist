@@ -1,98 +1,172 @@
 "use strict";
 
-const fs = require('fs');
-const path = require('path');
+const crypto = require('crypto');
+const fs = require('fs-extra');
 const present = require('present');
 const promisedExec = require('../../shared/promisedExec');
+const tmp = require('tmp');
 
+const DATA_FOLDER = `${__dirname}/../../../data`;
 const DEFAULT_LANG_COLOR = '#CCCCCC';
-const LANG_COLORS_FILE = '../../../private/data/colors.json';
+const LANG_COLORS_FILE = `${__dirname}/../../../private/data/colors.json`;
 
-let repoLocalPath;
+let _cachePath;
+let _httpClient;
 
-let codeStats = {};
+module.exports = (addon, httpClient, oauthToken, query, res) => {
+    _httpClient = httpClient;
 
-module.exports = (addon, req, res, repoPath) => {
-    repoLocalPath = repoPath;
+    return  fetchRepoMetadata(query.repoPath)
+            .then((repo) => new Promise((resolve, reject) => {
+                _cachePath = `${DATA_FOLDER}/${query.repoPath}/${crypto.createHash('md5').update(repo.updated_on).digest('hex')}`;
+                fs.ensureDirSync(_cachePath);
 
-    return new Promise((resolve, reject) => {
-        let fetchStatsPromise = fetchStats();
-        let fetchLanguagesPromise = fetchLanguages();
-        
-        Promise
-            .all([fetchStatsPromise, fetchLanguagesPromise])
-            .then(values => {
-                res.render('code-stats-overview', { 
-                    codeStats: codeStats,
-                    repoPath: req.query.repoPath
-                });
+                let branchesCountPromise = fetchBranchesCount(query.repoPath);
+                let commitsCountPromise = fetchCommitsCount(query.repoPath, repo.mainbranch.name);
+                let languagesPromise = fetchLanguages(query.repoPath, oauthToken);
+                
+                Promise
+                    .all([
+                        branchesCountPromise,
+                        commitsCountPromise, 
+                        languagesPromise
+                    ])
+                    .catch(reject)
+                    .then((values) => {
+                        res.render('code-stats-overview', { 
+                            codeStats: {
+                                branchesCount: values[0],
+                                branchesCountPlural: values[0].length > 1,
+                                commitsCount: values[1],
+                                commitsCountPlural: values[1].length > 1,
+                                languages: values[2]
+                            },
+                            repoPath: query.repoPath
+                        });
 
-                resolve();
-            })
-            .catch(reject);
-    });
+                        resolve();
+                    });
+            }));
 };
 
-function fetchStats() {
+function fetchRepoMetadata(repoPath) {
     return new Promise((resolve, reject) => {
-        let fetchCommitCountPromise = fetchCommitCount();
-        let fetchContributorsPromise = fetchContributors();
-
-        Promise
-            .all([fetchCommitCountPromise, fetchContributorsPromise])
-            .then(values => {
-                resolve();
-            })
-            .catch(reject);
+        _httpClient.get(
+            {
+                url: `/api/2.0/repositories/${repoPath}/`,
+                json: true
+            },
+            (err, res, body) => {
+                if (err) reject(err);
+                else resolve(body);
+            }
+        );
     });
 }
 
-function fetchCommitCount() {
-    let t = present();
-    console.log('fetchCommitCount (' + repoLocalPath + ') has started');
+function fetchBranchesCount(repoPath) {
+    let branchesFile = `${_cachePath}/branches.json`;
+    if (fs.existsSync(branchesFile)) {
+        let branches = fs.readJSONSync(branchesFile);
+        return Promise.resolve(branches.size || branches.values.length);
+    }
+    else {
+        let t = present();
+        console.log('fetchBranchesCount (' + repoPath + ') has started');
 
-    // https://stackoverflow.com/questions/677436/how-to-get-the-git-commit-count#comment7093558_4061706
-    return promisedExec('git rev-list --count master', { cwd: repoLocalPath }, stdout => {
-        codeStats.commitCount = parseInt(stdout.trim());
-
-        console.log('fetchCommitCount (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
-    });
+        return new Promise((resolve, reject) => {
+            _httpClient.get(
+                {
+                    url: `/api/2.0/repositories/${repoPath}/refs/branches`,
+                    json: true
+                },
+                (err, res, body) => {
+                    if (err) reject(err);
+                    else {
+                        console.log('fetchBranchesCount (' + repoPath + ') has finished: ' + (present() - t) + ' ms');
+                        fs.writeJSONSync(branchesFile, body);
+                        resolve(body.size || body.values.length);
+                    }
+                }
+            );
+        });
+    }
 }
 
-function fetchContributors() {
+function fetchCommitsCount(repoPath, branch) {
+    let commitsFile = `${_cachePath}/commits.json`;
+    if (fs.existsSync(commitsFile)) {
+        let commits = fs.readJSONSync(commitsFile);
+        return Promise.resolve(commits.size || commits.values.length);
+    }
+    else {
+        let t = present();
+        console.log('fetchCommitsCount (' + repoPath + ') has started');
+
+        return new Promise((resolve, reject) => {
+            _httpClient.get(
+                {
+                    url: `/api/2.0/repositories/${repoPath}/commits/${branch}`,
+                    json: true
+                },
+                (err, res, body) => {
+                    if (err) reject(err);
+                    else {
+                        console.log('fetchCommitsCount (' + repoPath + ') has finished: ' + (present() - t) + ' ms');
+                        fs.writeJSONSync(commitsFile, body);
+                        resolve(body.size || body.values.length);
+                    }
+                }
+            );
+        });
+    }
+}
+
+function fetchLanguages(repoPath, oauthToken) {
+    let languagesFile = `${_cachePath}/languages.json`;
+    if (fs.existsSync(languagesFile)) {
+        return Promise.resolve(fs.readJSONSync(languagesFile));
+    }
+    else {
+        return  cloneRepo(repoPath, oauthToken)
+                .then(githubLinguist)
+                .then((languages) => {
+                    fs.writeJSONSync(languagesFile, languages);
+                    return languages;
+                });
+    }
+}
+
+function cloneRepo(repoPath, oauthToken) {
     let t = present();
-    console.log('fetchContributors (' + repoLocalPath + ') has started');
+    console.log('cloneRepo (' + repoPath + ') has started');
 
-    // https://stackoverflow.com/a/33858300/3879872
-    return promisedExec('git log --all --format=\'%aE\' | sort -u', { cwd: repoLocalPath }, stdout => {
-        let lines = stdout.trim().split('\n');
+    let repoUri = 'https://x-token-auth:' + oauthToken + '@bitbucket.org/' + repoPath + '.git';
+    let repoLocalPath = tmp.dirSync().name;
 
-        codeStats.contributors = [];
-
-        for (var i in lines) {
-            codeStats.contributors.push(lines[i]);
+    return promisedExec(
+        `git clone ${repoUri} ${repoLocalPath} --depth 1`, 
+        {}, 
+        () => {
+            console.log('cloneRepo (' + repoPath + ') has finished: ' + (present() - t) + ' ms');
+            return repoLocalPath;
         }
-
-        codeStats.singleContributor = codeStats.contributors.length == 1;
-
-        console.log('fetchContributors (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
-    });
+    );
 }
 
-function fetchLanguages() {
+function githubLinguist(repoLocalPath) {
     let t = present();
-    console.log('fetchLanguages (' + repoLocalPath + ') has started');
+    console.log('githubLinguist (' + repoLocalPath + ') has started');
 
-    return promisedExec('github-linguist ' + repoLocalPath, {}, stdout => {
+    return promisedExec('github-linguist ' + repoLocalPath, {}, (stdout) => {
         let lines = stdout.trim().split('\n');
-        let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, LANG_COLORS_FILE)));
-        
-        codeStats.languages = [];
+        let languagesColors = JSON.parse(fs.readFileSync(LANG_COLORS_FILE));
+        let languages = [];
         
         for (var i in lines) {
             if (lines[i] != '') {
                 let aux = lines[i].split(/\s+/);
-                codeStats.languages.push({
+                languages.push({
                     lang: aux[1],
                     langColor: languagesColors[aux[1]] || DEFAULT_LANG_COLOR,
                     percent: aux[0]
@@ -100,6 +174,8 @@ function fetchLanguages() {
             }  
         }
 
-        console.log('fetchLanguages (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
+        console.log('githubLinguist (' + repoLocalPath + ') has finished: ' + (present() - t) + ' ms');
+
+        return languages;
     });
 }
