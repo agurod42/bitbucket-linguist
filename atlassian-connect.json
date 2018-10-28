@@ -27,29 +27,18 @@
         "webItem": [
         ],
         "repoPage": [
-            {
-                "url": "/code-stats-contributors?repoPath={repo_path}",
-                "name": {
-                    "value": "Contributors"
-                },
-                "location": "org.bitbucket.repository.navigation",
-                "key": "code-stats-contributors",
-                "params": {
-                    "auiIcon": "aui-iconfont-admin-roles"
-                }
-            }
         ],
         "webPanel": [
             {
+                "key": "code-stats-overview",
                 "url": "/code-stats-overview?repoPath={repo_path}",
                 "name": {
-                    "value": "GitHub Code Stats for Bitbucket"
+                    "value": "Bitbucket Linguist"
                 },
-                "location": "org.bitbucket.repository.overview.informationPanel",
-                "key": "code-stats-overview"
+                "location": "org.bitbucket.repository.overview.informationPanel"
             }
         ]
     },
     "scopes": ["project", "repository"],
-    "contexts": ["personal"]
+    "contexts": ["account"]
 }
