@@ -18,10 +18,6 @@ module.exports = {
         handleRequest(addon, req, res, require('./overview'))
     },
 
-    contributors: (addon, req, res) => {
-        handleRequest(addon, req, res, require('./contributors'))
-    },
-
 };
 
 function handleRequest(addon, req, res, handler) {
@@ -29,8 +25,6 @@ function handleRequest(addon, req, res, handler) {
     httpClient = addon.httpClient(req);
 
     try {
-        let codeStats = {};
-
         oauthTokenFromJWT()
             .then(oauthToken => cloneOrPullRepo(req.query.repoPath, oauthToken))
             .then(repoLocalPath => handler(addon, req, res, repoLocalPath))
