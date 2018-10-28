@@ -83,7 +83,7 @@ function fetchLanguages() {
     let t = present();
     console.log('fetchLanguages (' + repoLocalPath + ') has started');
 
-    return promisedExec('linguist ' + repoLocalPath, {}, stdout => {
+    return promisedExec('github-linguist ' + repoLocalPath, {}, stdout => {
         let lines = stdout.trim().split('\n');
         let languagesColors = JSON.parse(fs.readFileSync(path.resolve(__dirname, LANG_COLORS_FILE)));
         
