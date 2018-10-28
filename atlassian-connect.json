@@ -1,7 +1,7 @@
 {
-    "key": "github-code-stats-for-bitbucket",
-    "name": "GitHub Code Stats for Bitbucket",
-    "description": "An add-on that brings GitHub like code stats to your Bitbucket repo overview",
+    "key": "bitbucket-linguist",
+    "name": "Bitbucket Linguist",
+    "description": "Bitbucket add-on that brings GitHub language bar to your Bitbucket repo overview",
     "vendor": {
         "name": "Agustín Rodríguez",
         "url": "http://agurodriguez.net"

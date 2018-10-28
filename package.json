@@ -1,5 +1,5 @@
 {
-  "name": "github-code-stats-for-bitbucket",
+  "name": "bitbucket-linguist",
   "version": "1.0.0",
   "private": true,
   "engines": {
