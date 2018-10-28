@@ -30,7 +30,7 @@ function handleRequest(addon, req, res, handler) {
             .then(repoLocalPath => handler(addon, req, res, repoLocalPath))
             .catch(err => {
                 console.log(err);
-                res.sendStatus(501);
+                res.sendStatus(500);
             });
     } 
     catch (e) {

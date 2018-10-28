@@ -4,6 +4,9 @@
 
 #code-stats-overview {
   background: white;
+  border: 1px solid #dfe2e5;
+  border-radius: 3px;
+  box-sizing: border-box;
   width: 100%;
 }
 
