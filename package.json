@@ -6,7 +6,7 @@
     "node": "5.12.x"
   },
   "scripts": {
-    "start": "node --harmony app.js",
+    "start": "node --harmony --harmony_generators app.js",
     "fetch_github_colors": "node ./private/scripts/fetch_github_colors.js"
   },
   "dependencies": {
