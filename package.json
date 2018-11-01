@@ -19,6 +19,7 @@
     "express-hbs": "*",
     "fs-extra": "^7.0.0",
     "morgan": "^1.6.1",
+    "pg": "^7.6.0",
     "present": "^1.0.0",
     "sequelize": "^4.38.0",
     "static-expiry": ">=0.0.5",
