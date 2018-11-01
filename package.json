@@ -2,9 +2,6 @@
   "name": "bitbucket-linguist",
   "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": "6.11.x"
-  },
   "scripts": {
     "start": "node app.js",
     "fetch_github_colors": "node ./private/scripts/fetch_github_colors.js"
