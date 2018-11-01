@@ -13,7 +13,7 @@ const LANG_COLORS_FILE = `${__dirname}/../../../private/data/colors.json`;
 let _cachePath;
 let _httpClient;
 
-module.exports = (addon, httpClient, oauthToken, query, res) => {
+module.exports = (httpClient, oauthToken, query, res) => {
     _httpClient = httpClient;
 
     return  fetchRepoMetadata(query.repoPath)

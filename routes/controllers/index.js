@@ -12,7 +12,7 @@ function handleRequest(addon, req, res, handler) {
     _httpClient = addon.httpClient(req);
     try {
         oauthTokenFromJWT()
-            .then(oauthToken => handler(addon, _httpClient, oauthToken, req.query, res))
+            .then(oauthToken => handler(_httpClient, oauthToken, req.query, res))
             .catch((err) => {
                 console.log(err);
                 res.sendStatus(500);
@@ -36,6 +36,7 @@ function oauthTokenFromJWT() {
                     reject(err);
                 }
                 else {
+                    console.log(body);
                     resolve(JSON.parse(body).access_token);
                 }
             }
