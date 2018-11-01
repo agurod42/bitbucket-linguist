@@ -75,8 +75,7 @@
         // Make sure that your add-on can only be registered by the hosts on
         // these domains.
         "whitelist": [
-            "*.atlassian.net",
-            "*.bitbucket.org"
+            "bitbucket.org"
         ]
     }
 }
