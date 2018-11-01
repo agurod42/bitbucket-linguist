@@ -10,7 +10,7 @@
     "fetch_github_colors": "node ./private/scripts/fetch_github_colors.js"
   },
   "dependencies": {
-    "atlassian-connect-express": "^2.0.3",
+    "atlassian-connect-express": "^3.0.2",
     "body-parser": "^1.14.2",
     "compression": "^1.6.0",
     "cookie-parser": "^1.4.0",
@@ -18,10 +18,9 @@
     "express": "^4.13.3",
     "express-hbs": "*",
     "fs-extra": "^7.0.0",
-    "jugglingdb-postgres": "^0.1.0",
-    "jugglingdb-sqlite3": "0.0.5",
     "morgan": "^1.6.1",
     "present": "^1.0.0",
+    "sequelize": "^4.38.0",
     "static-expiry": ">=0.0.5",
     "tmp": "0.0.33"
   },
