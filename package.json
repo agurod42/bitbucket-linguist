@@ -15,7 +15,7 @@
     "compression": "^1.6.0",
     "cookie-parser": "^1.4.0",
     "errorhandler": "^1.4.2",
-    "express": "^4.13.3",
+    "express": "^4.17.3",
     "express-hbs": "*",
     "fs-extra": "^7.0.0",
     "morgan": "^1.6.1",
